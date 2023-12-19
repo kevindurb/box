@@ -9,13 +9,24 @@ default:
 
 variables:
   DOCKER_TLS_CERTDIR: '/certs'
-  IMAGE_TAG: registry.gitlab.com/kevindurb/box:latest
+  BUILD_TAG: registry.gitlab.com/kevindurb/box:$CI_BUILD_REF_NAME
+  RELEASE_TAG: registry.gitlab.com/kevindurb/box:latest
 
 stages:
   - build
+  - release
 
-build-container:
+build:
   stage: build
   script:
-    - docker build -t $IMAGE_TAG -f ./Containerfile .
-    - docker push $IMAGE_TAG
+    - docker build -t $BUILD_TAG -f ./Containerfile .
+    - docker push $BUILD_TAG
+
+release:
+  stage: release
+  script:
+    - docker pull $BUILD_TAG
+    - docker tag $BUILD_TAG $RELEASE_TAG
+    - docker push $RELEASE_TAG
+  only:
+    - main
