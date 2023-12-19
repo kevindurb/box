@@ -1,5 +1,14 @@
 ---
-image: docker
+default:
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
+  before_script:
+    - docker info
+
+variables:
+  DOCKER_TLS_CERTDIR: '/certs'
+
 stages:
   - build
 
