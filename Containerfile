@@ -1,16 +1,22 @@
-FROM quay.io/toolbx-images/alpine-toolbox:edge
+FROM docker.io/library/debian:12
 
-COPY extra-packages /
+COPY ./files/extra-packages /tmp
 
-RUN apk update && \
-    apk upgrade && \
-    grep -v '^#' /extra-packages | xargs apk add
+RUN apt update && \
+    apt upgrade && \
+    grep -v '^#' /tmp/extra-packages | xargs apt install --yes
 
-RUN rm /extra-packages
+RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
+    ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
+    ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
+    ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
+    ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
 
-RUN   ln -fs /bin/sh /usr/bin/sh && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
-      ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
+RUN useradd -ms /bin/bash  linuxbrew
+RUN echo 'linuxbrew ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+USER linuxbrew
+COPY ./files/install_homebrew.sh /tmp
+RUN bash /tmp/install_homebrew.sh
+
+COPY ./files/Brewfile /tmp
+RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && brew bundle install --file /tmp/Brewfile

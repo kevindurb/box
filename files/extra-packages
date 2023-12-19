@@ -1,0 +1,10 @@
+bash
+coreutils
+curl
+file
+g++
+grep
+git
+sudo
+zsh
+procps
