@@ -20,8 +20,3 @@ RUN echo 'linuxbrew ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER linuxbrew
 COPY ./files/install_homebrew.sh /tmp
 RUN bash /tmp/install_homebrew.sh
-
-COPY ./files/Brewfile /tmp
-RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" && \
-  brew bundle install --file /tmp/Brewfile && \
-  brew cleanup --prune=all
