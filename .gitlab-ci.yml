@@ -15,4 +15,4 @@ stages:
 build-container:
   stage: build
   script:
-    - docker build .
+    - docker build -f ./Containerfile .
