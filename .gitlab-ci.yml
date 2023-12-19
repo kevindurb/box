@@ -9,7 +9,8 @@ default:
 
 variables:
   DOCKER_TLS_CERTDIR: '/certs'
-  BUILD_TAG: registry.gitlab.com/kevindurb/box:$CI_BUILD_REF_NAME
+  PIPELINE_TAG: registry.gitlab.com/kevindurb/box:$CI_PIPELINE_ID
+  REF_NAME_TAG: registry.gitlab.com/kevindurb/box:$CI_COMMIT_REF_NAME
   RELEASE_TAG: registry.gitlab.com/kevindurb/box:latest
 
 stages:
@@ -19,14 +20,16 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t $BUILD_TAG -f ./Containerfile .
-    - docker push $BUILD_TAG
+    - docker build -t $PIPELINE_TAG -f ./Containerfile .
+    - docker tag $PIPELINE_TAG $REF_NAME_TAG
+    - docker push $REF_NAME_TAG
+    - docker push $PIPELINE_TAG
 
 release:
   stage: release
   script:
-    - docker pull $BUILD_TAG
-    - docker tag $BUILD_TAG $RELEASE_TAG
+    - docker pull $PIPELINE_TAG
+    - docker tag $PIPELINE_TAG $RELEASE_TAG
     - docker push $RELEASE_TAG
   only:
     - main
