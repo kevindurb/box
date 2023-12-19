@@ -5,9 +5,11 @@ default:
     - docker:dind
   before_script:
     - docker info
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
 
 variables:
   DOCKER_TLS_CERTDIR: '/certs'
+  IMAGE_TAG: registry.gitlab.com/kevindurb/box:latest
 
 stages:
   - build
@@ -15,6 +17,5 @@ stages:
 build-container:
   stage: build
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker build -t registry.gitlab.com/kevindurb/box -f ./Containerfile .
-    - docker push registry.gitlab.com/kevindurb/box
+    - docker build -t $IMAGE_TAG -f ./Containerfile .
+    - docker push $IMAGE_TAG
