@@ -15,4 +15,5 @@ stages:
 build-container:
   stage: build
   script:
-    - docker build -f ./Containerfile .
+    - docker build -t registry.gitlab.com/kevindurb/box -f ./Containerfile .
+    - docker push registry.gitlab.com/kevindurb/box
