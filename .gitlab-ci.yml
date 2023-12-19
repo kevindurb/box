@@ -1,8 +1,8 @@
 ---
 default:
-  image: docker:24.0.5
+  image: docker:git
   services:
-    - docker:24.0.5-dind
+    - docker:dind
   before_script:
     - docker info
 
@@ -15,5 +15,6 @@ stages:
 build-container:
   stage: build
   script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
     - docker build -t registry.gitlab.com/kevindurb/box -f ./Containerfile .
     - docker push registry.gitlab.com/kevindurb/box
