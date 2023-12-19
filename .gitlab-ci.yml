@@ -20,7 +20,7 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t $PIPELINE_TAG -f ./Containerfile .
+    - docker build -t $PIPELINE_TAG -f ./Containerfile --squash .
     - docker tag $PIPELINE_TAG $REF_NAME_TAG
     - docker push $REF_NAME_TAG
     - docker push $PIPELINE_TAG

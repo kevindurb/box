@@ -51,8 +51,6 @@ brew "nyancat"
 brew "openssh"
 brew "pgcli"
 brew "php@8.1", link: true
-brew "podman"
-brew "podman-compose"
 brew "prettyping"
 brew "procs"
 brew "pv"
