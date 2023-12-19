@@ -1,0 +1,9 @@
+---
+image: docker
+stages:
+  - build
+
+build-container:
+  stage: build
+  script:
+    - docker build .
