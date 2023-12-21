@@ -1,46 +1,53 @@
+# just
+# kubectl
 ansible
+apt-utils
 autojump
 bat
 bc
 build-essential
 curl
+dialog
 diffutils
 entr
 exa
 findutils
 fzf
 gcc
-# gcc-c++
 gh
 git
+gnupg2
 httpie
 jq
-# just
-# kubectl
 less
+libegl1-mesa
+libgl1-mesa-glx
+libnss-myhostname
+libvte-2.9*-common
+libvte-common
+libvulkan1
 litecli
+lsof
 make
+mesa-vulkan-drivers
 mycli
 ncdu
-# ncurses
+ncurses-base
 neofetch
 neovim
 openssl
 passwd
 pgcli
-# pinentry
+pinentry-curses
 prettyping
 procps
 python3-pip
 ripgrep
-# shadow-utils
 sudo
 tig
+time
 tldr
 tmux
 util-linux
-# util-linux-user
-# vte-profile
 wget
 zsh
-# starship
