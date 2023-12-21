@@ -1,9 +1,9 @@
 FROM docker.io/library/debian:12
+ARG TARGETARCH
 
 COPY ./files/extra-packages /tmp
 
 RUN apt update && \
-  apt upgrade && \
   grep -v '^#' /tmp/extra-packages | xargs apt install --yes && \
   rm -rf /var/lib/apt/lists/*
 
@@ -15,8 +15,10 @@ RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
 
-RUN useradd -ms /bin/bash  linuxbrew
-RUN echo 'linuxbrew ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-USER linuxbrew
-COPY ./files/install_homebrew.sh /tmp
-RUN bash /tmp/install_homebrew.sh
+COPY ./files/host-spawn-$TARGETARCH /usr/bin/host-spawn
+
+COPY ./files/install_starship.sh /tmp/install_starship.sh
+RUN sh /tmp/install_starship.sh --yes
+
+ENV SHELL=/usr/bin/zsh
+ENTRYPOINT ["/bin/zsh"]

@@ -1,6 +1,46 @@
-procps
-curl
-git
-sudo
-zsh
+ansible
+autojump
+bat
+bc
 build-essential
+curl
+diffutils
+entr
+exa
+findutils
+fzf
+gcc
+# gcc-c++
+gh
+git
+httpie
+jq
+# just
+# kubectl
+less
+litecli
+make
+mycli
+ncdu
+# ncurses
+neofetch
+neovim
+openssl
+passwd
+pgcli
+# pinentry
+prettyping
+procps
+python3-pip
+ripgrep
+# shadow-utils
+sudo
+tig
+tldr
+tmux
+util-linux
+# util-linux-user
+# vte-profile
+wget
+zsh
+# starship
