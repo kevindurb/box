@@ -20,7 +20,8 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t $PIPELINE_TAG -f ./Containerfile --squash .
+    - docker buildx create --use
+    - docker buildx build --platform limux/amd64,linux/arm64 -t $PIPELINE_TAG -f ./Containerfile --squash .
     - docker tag $PIPELINE_TAG $REF_NAME_TAG
     - docker push $REF_NAME_TAG
     - docker push $PIPELINE_TAG
