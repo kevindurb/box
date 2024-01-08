@@ -21,4 +21,4 @@ provision:
   - mode: user
     script: |
       #! /bin/bash
-      distrobox create -i registry.gitlab.com/kevindurb/box -n box -p
+      mkdir -p ~/.local/bin
