@@ -27,8 +27,6 @@ build:
 release:
   stage: release
   script:
-    - docker pull $PIPELINE_TAG
-    - docker tag $PIPELINE_TAG $RELEASE_TAG
-    - docker push $RELEASE_TAG
+    - docker buildx imagetools create $PIPELINE_TAG -t $RELEASE_TAG --push
   only:
     - main
