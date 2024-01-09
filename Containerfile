@@ -1,11 +1,11 @@
-FROM docker.io/library/debian:12
+FROM quay.io/fedora/fedora:39
 ARG TARGETARCH
 
 COPY ./files/extra-packages /tmp
 
-RUN apt update && \
-  grep -v '^#' /tmp/extra-packages | xargs apt install --yes && \
-  rm -rf /var/lib/apt/lists/*
+RUN dnf update -y && \
+  grep -v '^#' /tmp/extra-packages | xargs dnf install -y && \
+  dnf clean all
 
 RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
@@ -24,4 +24,4 @@ COPY ./files/install_chezmoi.sh /tmp/install_chezmoi.sh
 RUN sh /tmp/install_chezmoi.sh -b /usr/local/bin
 
 ENV SHELL=/usr/bin/zsh
-ENTRYPOINT ["/bin/zsh"]
+ENTRYPOINT ["/usr/bin/zsh"]
