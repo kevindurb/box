@@ -33,8 +33,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Buildah Action
+      - name: Build Image
         uses: redhat-actions/buildah-build@v2
+        id: build_image
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.IMAGE_TAGS }}
