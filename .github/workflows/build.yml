@@ -38,6 +38,8 @@ jobs:
         with:
           image: ${{ env.IMAGE_NAME }}
           tags: ${{ env.IMAGE_TAGS }}
+          containerfiles: |
+            ./Containerfile
 
       - name: Push To GHCR
         uses: redhat-actions/push-to-registry@v2
