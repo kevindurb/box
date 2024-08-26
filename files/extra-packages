@@ -1,34 +1,57 @@
+ansible
+apt-utils
+autojump-zsh
+bat
+bc
 curl
 dialog
 diffutils
+entr
+eza
 findutils
+fzf
 gcc
-# gcc-c++
+gcc-c++
+gh
 git
-# gnupg2
+git-delta
+gnupg2
+httpie
+jq
+just
 less
+litecli
 lsof
 make
-man-db
-# mesa-vulkan-drivers
+man
+mesa-vulkan-drivers
+mycli
+ncdu
 ncurses
-# ncurses-base
+ncurses-base
+neofetch
+neovim
 openssl
-# passwd
-# pinentry
-# pinentry-curses
+passwd
+pgcli
+pinentry
+pinentry-curses
+prettyping
 procps
-# procps-ng
+procps-ng
 python-pip
-# python3-pip
-# shadow-utils
+python3-pip
+rcm
+ripgrep
+shadow-utils
 sudo
+tig
 time
-# util-linux
-# util-linux-user
-# vte-profile
+tldr
+tmux
+util-linux
+util-linux-user
+vte-profile
 wget
 which
 zsh
-chezmoi
-starship
