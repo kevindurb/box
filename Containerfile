@@ -3,7 +3,7 @@ ARG TARGETARCH
 
 COPY ./files/extra-packages /tmp
 
-RUN dnf update -y && \
+RUN dnf check-update && \
   grep -v '^#' /tmp/extra-packages | xargs dnf install -y && \
   dnf clean all
 
