@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:39
+FROM quay.io/toolbx-images/fedora-toolbox:40
 ARG TARGETARCH
 
 COPY ./files/extra-packages /tmp
@@ -19,9 +19,6 @@ COPY ./files/host-spawn-$TARGETARCH /usr/bin/host-spawn
 
 COPY ./files/install_starship.sh /tmp/install_starship.sh
 RUN sh /tmp/install_starship.sh --yes
-
-COPY ./files/install_chezmoi.sh /tmp/install_chezmoi.sh
-RUN sh /tmp/install_chezmoi.sh -b /usr/local/bin
 
 ENV SHELL=/usr/bin/zsh
 ENTRYPOINT ["/usr/bin/zsh"]
