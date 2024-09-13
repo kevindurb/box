@@ -1,5 +1,4 @@
-FROM registry.fedoraproject.org/fedora-toolbox:40
-ARG TARGETARCH
+FROM registry.fedoraproject.org/fedora:40
 
 COPY ./files/extra-packages /tmp
 
@@ -7,18 +6,16 @@ RUN dnf check-update && \
   grep -v '^#' /tmp/extra-packages | xargs dnf install -y && \
   dnf clean all
 
-RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/distrobox && \
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/xdg-open && \
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
+RUN groupadd -g 1000 dev
+RUN groupadd sudo
+RUN useradd -m -d /home/dev -s /usr/bin/zsh -g 1000 -G sudo -u 1000 dev 
 
-COPY ./files/host-spawn-$TARGETARCH /usr/bin/host-spawn
+WORKDIR /home/dev
+USER dev
 
-COPY ./files/install_starship.sh /tmp/install_starship.sh
-RUN sh /tmp/install_starship.sh --yes
+RUN mkdir .ssh
+COPY ./files/authorized_keys .ssh/authorized_keys
 
-ENV SHELL=/usr/bin/zsh
-ENTRYPOINT ["/usr/bin/zsh"]
+EXPOSE 22
+ENTRYPOINT ["/usr/sbin/sshd"]
+CMD ["-D"]

@@ -38,3 +38,4 @@ tmux
 wget
 which
 zsh
+openssh-server
