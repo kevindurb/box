@@ -9,12 +9,8 @@ RUN dnf check-update && \
 RUN groupadd -g 1000 dev
 RUN groupadd sudo
 RUN useradd -m -d /home/dev -s /usr/bin/zsh -g 1000 -G sudo -u 1000 dev 
-
-WORKDIR /home/dev
-USER dev
-
-RUN mkdir .ssh
-COPY ./files/authorized_keys .ssh/authorized_keys
+RUN mkdir /home/dev/.ssh
+COPY ./files/authorized_keys /home/dev/.ssh/authorized_keys
 
 EXPOSE 22
 ENTRYPOINT ["/usr/sbin/sshd"]
