@@ -1,10 +1,12 @@
 ---
 vmType: vz
 images:
-  - location: 'https://cloud-images.ubuntu.com/releases/23.10/release/ubuntu-23.10-server-cloudimg-amd64.img'
+  - location: 'https://download.fedoraproject.org/pub/fedora/linux/releases/41/Cloud/x86_64/images/Fedora-Cloud-Base-Generic-41-1.4.x86_64.qcow2'
     arch: 'x86_64'
-  - location: 'https://cloud-images.ubuntu.com/releases/23.10/release/ubuntu-23.10-server-cloudimg-arm64.img'
+    digest: 'sha256:6205ae0c524b4d1816dbd3573ce29b5c44ed26c9fbc874fbe48c41c89dd0bac2'
+  - location: 'https://download.fedoraproject.org/pub/fedora/linux/releases/41/Cloud/aarch64/images/Fedora-Cloud-Base-Generic-41-1.4.aarch64.qcow2'
     arch: 'aarch64'
+    digest: 'sha256:085883b42c7e3b980e366a1fe006cd0ff15877f7e6e984426f3c6c67c7cc2faa'
 mounts:
   - location: '~'
   - location: '/tmp/lima'
@@ -14,11 +16,43 @@ mountType: virtiofs
 provision:
   - mode: system
     script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      command -v podman >/dev/null 2>&1 && exit 0
+      dnf -y install podman
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      systemctl --user enable --now podman.socket
+  - mode: system
+    script: |
       #! /bin/bash
       set -eux -o pipefail
-      export DEBIAN_FRONTEND=noninteractive
-      apt-get install -y distrobox
+      dnf install -y distrobox
   - mode: user
     script: |
       #! /bin/bash
       mkdir -p ~/.local/bin
+
+probes:
+  - script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      if ! timeout 30s bash -c "until command -v podman >/dev/null 2>&1; do sleep 3; done"; then
+        echo >&2 "podman is not installed yet"
+        exit 1
+      fi
+    hint: See "/var/log/cloud-init-output.log" in the guest
+
+portForwards:
+  - guestSocket: '/run/user/{{.UID}}/podman/podman.sock'
+    hostSocket: '{{.Dir}}/sock/podman.sock'
+
+message: |
+  To run `podman` on the host (assumes podman-remote is installed), run the following commands:
+  ------
+  podman system connection add lima-{{.Name}} "unix://{{.Dir}}/sock/podman.sock"
+  podman system connection default lima-{{.Name}}
+  podman{{if eq .HostOS "linux"}} --remote{{end}} run quay.io/podman/hello
+  ------
