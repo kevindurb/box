@@ -7,11 +7,9 @@ RUN dnf check-update && \
   autojump-zsh \
   bat \
   bc \
-  curl \
   diffutils \
   entr \
   eza \
-  findutils \
   fzf \
   gh \
   git \
@@ -36,7 +34,6 @@ RUN dnf check-update && \
   python3-pip \
   rcm \
   ripgrep \
-  sudo \
   tig \
   time \
   tldr \
