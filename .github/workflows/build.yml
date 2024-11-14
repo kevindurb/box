@@ -24,7 +24,7 @@ env:
 jobs:
   build-containers:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.10
     permissions:
       contents: read
       packages: write
@@ -32,10 +32,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install Latest Buildah
-        run: |
-          curl -sL https://github.com/suse/buildah/releases/latest | sh -s -- -b /usr/local/bin buildah
 
       - name: Install qemu dependency
         run: |
