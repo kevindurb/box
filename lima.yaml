@@ -9,9 +9,18 @@ images:
     digest: 'sha256:085883b42c7e3b980e366a1fe006cd0ff15877f7e6e984426f3c6c67c7cc2faa'
 mounts:
   - location: '~'
+    writable: true
   - location: '/tmp/lima'
     writable: true
 mountType: virtiofs
+
+rosetta:
+  enabled: true
+  binfmt: true
+
+containerd:
+  system: false
+  user: false
 
 provision:
   - mode: system
@@ -34,6 +43,16 @@ provision:
     script: |
       #! /bin/bash
       mkdir -p ~/.local/bin
+  - mode: user
+    script: |
+      #!/bin/sh
+      sudo chown $USER:$USER $HOME # Fix "read-only file system" due to root-owned files
+      echo 'container_image_default="ghcr.io/kevindurb/box:latest"' > $HOME/.distroboxrc
+      echo 'container_user_custom_home="/Users/$USER"' >> $HOME/.distroboxrc
+      echo 'container_name_default="box"' >> $HOME/.distroboxrc
+      echo 'non_interactive="1"' >> $HOME/.distroboxrc
+      echo 'container_generate_entry="1"' >> $HOME/.distroboxrc
+      echo 'init="1"' >> $HOME/.distroboxrc
 
 probes:
   - script: |
