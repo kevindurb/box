@@ -25,7 +25,6 @@ RUN dnf check-update && \
   man \
   mycli \
   ncdu \
-  neofetch \
   neovim \
   openssl \
   pgcli \
