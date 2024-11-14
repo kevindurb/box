@@ -1,17 +1,60 @@
-FROM registry.fedoraproject.org/fedora:40
+FROM quay.io/fedora/fedora:41
 
-COPY ./files/extra-packages /tmp
+ARG TARGETARCH
 
 RUN dnf check-update && \
-  grep -v '^#' /tmp/extra-packages | xargs dnf install -y && \
+  dnf install -y \
+  autojump-zsh \
+  bat \
+  bc \
+  curl \
+  diffutils \
+  entr \
+  eza \
+  findutils \
+  fzf \
+  gh \
+  git \
+  git-delta \
+  gnupg2 \
+  httpie \
+  jq \
+  just \
+  less \
+  litecli \
+  lsof \
+  make \
+  man \
+  mycli \
+  ncdu \
+  neofetch \
+  neovim \
+  openssl \
+  pgcli \
+  prettyping \
+  python-pip \
+  python3-pip \
+  rcm \
+  ripgrep \
+  sudo \
+  tig \
+  time \
+  tldr \
+  tmux \
+  wget \
+  which \
+  zsh && \
   dnf clean all
 
-RUN groupadd -g 1000 dev
-RUN groupadd sudo
-RUN useradd -m -d /home/dev -s /usr/bin/zsh -g 1000 -G sudo -u 1000 dev 
-RUN mkdir /home/dev/.ssh
-COPY ./files/authorized_keys /home/dev/.ssh/authorized_keys
+COPY ./files/host-spawn-$TARGETARCH /usr/bin/host-spawn
 
-EXPOSE 22
-ENTRYPOINT ["/usr/sbin/sshd"]
-CMD ["-D"]
+RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/distrobox && \
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/xdg-open && \
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
+
+ENV SHELL=/usr/bin/zsh
+ENTRYPOINT ["/usr/bin/zsh"]
