@@ -27,20 +27,17 @@ provision:
     script: |
       #!/bin/sh
       set -eux -o pipefail
-      command -v podman >/dev/null 2>&1 && exit 0
-      dnf -y install podman
+      dnf install -y podman zsh which
+  - mode: system
+    script: |
+      #!/bin/sh
+      set -eux -o pipefail
+      [ -f /usr/local/bin/distrobox ] || curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
   - mode: user
     script: |
       #!/bin/sh
       set -eux -o pipefail
       systemctl --user enable --now podman.socket
-  - mode: system
-    script: |
-      #!/bin/sh
-      [ -f /usr/local/bin/distrobox ] || curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
-  - mode: user
-    script: |
-      #!/bin/sh
       sudo chown $USER:$USER $HOME # Fix "read-only file system" due to root-owned files
       mkdir -p $HOME/.local/bin
       echo 'container_image_default="ghcr.io/kevindurb/box:latest"' > $HOME/.distroboxrc
@@ -52,6 +49,7 @@ provision:
       echo 'log_driver = "k8s-file"' >> $HOME/.config/containers/containers.conf
       echo '[engine]' >> $HOME/.config/containers/containers.conf
       echo 'events_logger = "file"' >> $HOME/.config/containers/containers.conf
+      sudo chsh -s $(which zsh) $USER
 
 probes:
   - script: |

@@ -4,17 +4,24 @@ ARG TARGETARCH
 
 RUN dnf check-update && \
   dnf install -y \
-  autojump-zsh \
   bat \
   bc \
+  bzip2 \
+  chpasswd \
+  curl \
+  diff \
   diffutils \
   entr \
   eza \
+  find \
+  findmnt \
   fzf \
   gh \
   git \
   git-delta \
   gnupg2 \
+  gpg \
+  hostname \
   httpie \
   jq \
   just \
@@ -23,22 +30,39 @@ RUN dnf check-update && \
   lsof \
   make \
   man \
+  mount \
   mycli \
   ncdu \
   neovim \
   openssl \
+  passwd \
   pgcli \
+  pigz \
+  pinentry \
+  ping \
   prettyping \
+  ps \
   python-pip \
   python3-pip \
   rcm \
   ripgrep \
+  rsync \
+  script \
+  ssh \
+  sudo \
   tig \
   time \
   tldr \
   tmux \
+  tree \
+  umount \
+  unzip \
+  useradd \
+  wc \
   wget \
   which \
+  xauth \
+  zip \
   zsh && \
   dnf clean all
 
