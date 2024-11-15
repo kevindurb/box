@@ -25,17 +25,17 @@ containerd:
 provision:
   - mode: system
     script: |
-      #!/bin/sh
+      #!/bin/bash
       set -eux -o pipefail
       dnf install -y podman zsh which
   - mode: system
     script: |
-      #!/bin/sh
+      #!/bin/bash
       set -eux -o pipefail
       [ -f /usr/local/bin/distrobox ] || curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
   - mode: user
     script: |
-      #!/bin/sh
+      #!/bin/bash
       set -eux -o pipefail
       systemctl --user enable --now podman.socket
       sudo chown $USER:$USER $HOME # Fix "read-only file system" due to root-owned files
@@ -53,11 +53,11 @@ provision:
 
 probes:
   - script: |
-      #!/bin/sh
+      #!/bin/bash
       timeout 30s sh -c "until [ -f /usr/bin/podman ]; do sleep 3; done" || exit 1
     description: podman installed
   - script: |
-      #!/bin/sh
+      #!/bin/bash
       timeout 30s sh -c "until [ -f /usr/local/bin/distrobox ]; do sleep 3; done" || exit 1
     description: distrobox installed
 
