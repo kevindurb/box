@@ -27,7 +27,7 @@ provision:
     script: |
       #!/bin/bash
       set -eux -o pipefail
-      dnf install -y podman zsh which
+      dnf install -y podman zsh which flatpak
   - mode: system
     script: |
       #!/bin/bash
@@ -49,7 +49,6 @@ provision:
       echo 'log_driver = "k8s-file"' >> $HOME/.config/containers/containers.conf
       echo '[engine]' >> $HOME/.config/containers/containers.conf
       echo 'events_logger = "file"' >> $HOME/.config/containers/containers.conf
-      sudo chsh -s $(which zsh) $USER
 
 probes:
   - script: |
