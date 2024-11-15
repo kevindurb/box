@@ -25,44 +25,43 @@ containerd:
 provision:
   - mode: system
     script: |
-      #!/bin/bash
+      #!/bin/sh
       set -eux -o pipefail
       command -v podman >/dev/null 2>&1 && exit 0
       dnf -y install podman
   - mode: user
     script: |
-      #!/bin/bash
+      #!/bin/sh
       set -eux -o pipefail
       systemctl --user enable --now podman.socket
   - mode: system
     script: |
-      #! /bin/bash
-      set -eux -o pipefail
-      dnf install -y distrobox
-  - mode: user
-    script: |
-      #! /bin/bash
-      mkdir -p ~/.local/bin
+      #!/bin/sh
+      [ -f /usr/local/bin/distrobox ] || curl -s https://raw.githubusercontent.com/89luca89/distrobox/main/install | sh
   - mode: user
     script: |
       #!/bin/sh
       sudo chown $USER:$USER $HOME # Fix "read-only file system" due to root-owned files
+      mkdir -p $HOME/.local/bin
       echo 'container_image_default="ghcr.io/kevindurb/box:latest"' > $HOME/.distroboxrc
       echo 'container_user_custom_home="/Users/$USER"' >> $HOME/.distroboxrc
       echo 'container_name_default="box"' >> $HOME/.distroboxrc
-      echo 'non_interactive="1"' >> $HOME/.distroboxrc
-      echo 'container_generate_entry="1"' >> $HOME/.distroboxrc
-      echo 'init="1"' >> $HOME/.distroboxrc
+
+      mkdir -p $HOME/.config/containers
+      echo '[containers]' > $HOME/.config/containers/containers.conf
+      echo 'log_driver = "k8s-file"' >> $HOME/.config/containers/containers.conf
+      echo '[engine]' >> $HOME/.config/containers/containers.conf
+      echo 'events_logger = "file"' >> $HOME/.config/containers/containers.conf
 
 probes:
   - script: |
-      #!/bin/bash
-      set -eux -o pipefail
-      if ! timeout 30s bash -c "until command -v podman >/dev/null 2>&1; do sleep 3; done"; then
-        echo >&2 "podman is not installed yet"
-        exit 1
-      fi
-    hint: See "/var/log/cloud-init-output.log" in the guest
+      #!/bin/sh
+      timeout 30s sh -c "until [ -f /usr/bin/podman ]; do sleep 3; done" || exit 1
+    description: podman installed
+  - script: |
+      #!/bin/sh
+      timeout 30s sh -c "until [ -f /usr/local/bin/distrobox ]; do sleep 3; done" || exit 1
+    description: distrobox installed
 
 portForwards:
   - guestSocket: '/run/user/{{.UID}}/podman/podman.sock'
