@@ -17,9 +17,6 @@ RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
 
-COPY ./files/install_starship.sh /tmp/install_starship.sh
-RUN sh /tmp/install_starship.sh --yes
-
 COPY ./files/install_chezmoi.sh /tmp/install_chezmoi.sh
 RUN sh /tmp/install_chezmoi.sh -b /usr/local/bin
 
