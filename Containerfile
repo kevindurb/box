@@ -2,6 +2,8 @@ FROM quay.io/fedora/fedora:41
 
 ARG TARGETARCH
 
+COPY ./files/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+
 COPY ./files/extra-packages /tmp
 COPY ./files/install_extra_packages.sh /tmp
 
