@@ -1,12 +1,10 @@
 FROM scratch as host-spawn-amd64
 ARG HOST_SPAWN_VERSION=1.6.0
-ADD --checksum=sha256:75159f0d3924a0bd6d230c6414d19ad44609b5a16671db6624681c910f9bb4ff \
-  https://github.com/1player/host-spawn/releases/download/v${HOST_SPAWN_VERSION}/host-spawn-x86_64 /host-spawn
+ADD https://github.com/1player/host-spawn/releases/download/v${HOST_SPAWN_VERSION}/host-spawn-x86_64 /host-spawn
 
 FROM docker.io/library/alpine as host-spawn-arm64
 ARG HOST_SPAWN_VERSION=1.6.0
-ADD --checksum=sha256:00f9617c139b9447e6c453a27602ca87f28cdac3aa62b04dcb38d215b2758165 \
-  https://github.com/1player/host-spawn/releases/download/v${HOST_SPAWN_VERSION}/host-spawn-aarch64 /host-spawn
+ADD https://github.com/1player/host-spawn/releases/download/v${HOST_SPAWN_VERSION}/host-spawn-aarch64 /host-spawn
 
 FROM docker.io/library/alpine as k9s
 ARG TARGETARCH
