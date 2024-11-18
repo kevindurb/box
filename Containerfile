@@ -2,17 +2,19 @@ FROM quay.io/fedora/fedora:41
 
 ARG TARGETARCH
 
-COPY ./files/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
+COPY ./files/repos/kubernetes.repo /etc/yum.repos.d/kubernetes.repo
 
 COPY ./files/extra-packages /tmp
+COPY ./files/extra-copr-repos /tmp
 COPY ./files/install_extra_packages.sh /tmp
 
 RUN sh /tmp/install_extra_packages.sh
 
-COPY ./files/host-spawn-$TARGETARCH /usr/bin/host-spawn
+COPY ./files/bin/host-spawn/host-spawn-$TARGETARCH /usr/bin/host-spawn
+COPY ./files/bin/k9s/k9s-$TARGETARCH /usr/local/bin/k9s
 
 RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
-  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \ 
+  ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/podman && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/distrobox && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/xdg-open && \
