@@ -1,13 +1,11 @@
 bat
 bc
-bzip2
 chpasswd
-curl
 diff
 diffutils
 duf
 entr
-eza
+# eza
 fastfetch
 find
 findmnt
@@ -55,7 +53,6 @@ rsync
 script
 ssh
 starship
-sudo
 tig
 time
 tldr

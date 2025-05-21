@@ -10,19 +10,19 @@ ADD https://github.com/1player/host-spawn/releases/download/v${HOST_SPAWN_VERSIO
 
 FROM docker.io/library/alpine as k9s
 ARG TARGETARCH
-ARG K9S_VERSION=0.32.7
+ARG K9S_VERSION=0.50.6
 ADD https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGETARCH}.tar.gz .
 RUN tar -xzf ./k9s_Linux_${TARGETARCH}.tar.gz k9s
 
 FROM docker.io/library/alpine as kubeseal
 ARG TARGETARCH
-ARG KUBESEAL_VERSION=0.27.2
+ARG KUBESEAL_VERSION=0.29.0
 ADD https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-${TARGETARCH}.tar.gz .
 RUN tar -xzf ./kubeseal-${KUBESEAL_VERSION}-linux-${TARGETARCH}.tar.gz kubeseal
 
 FROM docker.io/library/alpine as krew
 ARG TARGETARCH
-ARG KREW_VERSION=0.4.4
+ARG KREW_VERSION=0.4.5
 ADD https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/krew-linux_${TARGETARCH}.tar.gz .
 RUN tar -xzf ./krew-linux_${TARGETARCH}.tar.gz &&\
   mv krew-linux_${TARGETARCH} krew
