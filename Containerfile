@@ -14,12 +14,6 @@ ARG K9S_VERSION=0.32.7
 ADD https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_${TARGETARCH}.tar.gz .
 RUN tar -xzf ./k9s_Linux_${TARGETARCH}.tar.gz k9s
 
-FROM docker.io/library/alpine as chezmoi
-ARG TARGETARCH
-ARG CHEZMOI_VERSION=2.54.0
-ADD https://github.com/twpayne/chezmoi/releases/download/v${CHEZMOI_VERSION}/chezmoi_${CHEZMOI_VERSION}_linux_${TARGETARCH}.tar.gz .
-RUN tar -xzf ./chezmoi_${CHEZMOI_VERSION}_linux_${TARGETARCH}.tar.gz chezmoi
-
 FROM docker.io/library/alpine as kubeseal
 ARG TARGETARCH
 ARG KUBESEAL_VERSION=0.27.2
@@ -33,7 +27,7 @@ ADD https://github.com/kubernetes-sigs/krew/releases/download/v${KREW_VERSION}/k
 RUN tar -xzf ./krew-linux_${TARGETARCH}.tar.gz &&\
   mv krew-linux_${TARGETARCH} krew
 
-FROM quay.io/fedora/fedora:41
+FROM quay.io/fedora/fedora:42
 ARG TARGETARCH
 
 WORKDIR /tmp
@@ -45,7 +39,6 @@ RUN sh ./install_extra_packages.sh &&\
 
 COPY --from=host-spawn-${TARGETARCH} /host-spawn /usr/bin/host-spawn
 COPY --from=k9s /k9s /usr/local/bin/k9s
-COPY --from=chezmoi /chezmoi /usr/local/bin/chezmoi
 COPY --from=kubeseal /kubeseal /usr/local/bin/kubeseal
 COPY --from=krew /krew /usr/local/bin/krew
 
