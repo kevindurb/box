@@ -50,5 +50,6 @@ RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/rpm-ostree && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/transactional-update
 
+WORKDIR /
 ENV SHELL=/usr/bin/zsh
 ENTRYPOINT ["/usr/bin/zsh"]
