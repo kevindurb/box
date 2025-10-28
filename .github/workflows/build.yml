@@ -1,9 +1,6 @@
 ---
 name: build
 on:
-  pull_request:
-    branches:
-      - main
   schedule:
     # 10:05am UTC every sunday
     - cron: '05 10 * * 0'
