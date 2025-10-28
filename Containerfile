@@ -1,12 +1,12 @@
 FROM scratch as host-spawn-amd64
 # renovate: datasource=github-tags depName=host-spawn packageName=1player/host-spawn
-ARG HOST_SPAWN_VERSION=v1.6.0
+ARG HOST_SPAWN_VERSION=v1.6.2
 ARG MARCH=x86_64
 ADD https://github.com/1player/host-spawn/releases/download/${HOST_SPAWN_VERSION}/host-spawn-${MARCH} /host-spawn
 
 FROM scratch as host-spawn-arm64
 # renovate: datasource=github-tags depName=host-spawn packageName=1player/host-spawn
-ARG HOST_SPAWN_VERSION=v1.6.0
+ARG HOST_SPAWN_VERSION=v1.6.2
 ARG MARCH=aarch64
 ADD https://github.com/1player/host-spawn/releases/download/${HOST_SPAWN_VERSION}/host-spawn-${MARCH} /host-spawn
 
