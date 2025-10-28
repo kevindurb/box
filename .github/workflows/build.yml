@@ -1,63 +1,137 @@
----
 name: build
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   schedule:
-    # 10:05am UTC every sunday
-    - cron: '05 10 * * 0'
+    - cron: '05 10 * * 0' # 10:05 UTC Sundays
   push:
-    branches:
-      - main
-    paths-ignore:
-      - '**/README.md'
+    branches: [main]
+    paths-ignore: ['**/README.md']
   workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/kevindurb/box
 
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-containers:
-    name: Build
-    runs-on: ubuntu-latest
+  build-amd64:
+    name: Build amd64
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
       id-token: write
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install qemu dependency
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
-
-      - name: Extract metadata (tags, labels)
+      - name: Docker metadata (arch-suffixed tags)
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/kevindurb/box
+          images: ${{ env.IMAGE }}
           tags: |
-            type=sha
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            type=raw,value={{date 'YYYY.MM.DD'}},enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,suffix=-amd64
+            type=raw,value=latest-amd64,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value={{date 'YYYY.MM.DD'}}-amd64,enable=${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build and push with Buildah
-        id: build
+      - name: Build (native) with Buildah
         uses: redhat-actions/buildah-build@v2
         with:
+          platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64, linux/arm64
           containerfiles: |
             ./Containerfile
 
-      - name: Push to GHCR
+      - name: Push arch image(s)
+        id: push
         uses: redhat-actions/push-to-registry@v2
         with:
           tags: ${{ steps.meta.outputs.tags }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+  build-arm64:
+    name: Build arm64
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker metadata (arch-suffixed tags)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,suffix=-arm64
+            type=raw,value=latest-arm64,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value={{date 'YYYY.MM.DD'}}-arm64,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build (native) with Buildah
+        uses: redhat-actions/buildah-build@v2
+        with:
+          platforms: linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          containerfiles: |
+            ./Containerfile
+
+      - name: Push arch image(s)
+        id: push
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          tags: ${{ steps.meta.outputs.tags }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+  manifest:
+    name: Create & push multi-arch manifests (by digest)
+    needs: [build-amd64, build-arm64]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR (Docker)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Destination (unsuffixed) tags: sha always; latest/date only on main.
+      - name: Docker metadata (dest tags)
+        id: meta_dest
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value={{date 'YYYY.MM.DD'}},enable=${{ github.ref == 'refs/heads/main' }}
+
+      # Create & push manifests: same two digests feed every destination tag.
+      - name: Create & push multi-arch manifests
+        uses: int128/docker-manifest-create-action@v2
+        with:
+          tags: ${{ steps.meta_dest.outputs.tags }}
+          sources: |
+            ${{ env.IMAGE }}@${{ needs.build-amd64.outputs.digest }}
+            ${{ env.IMAGE }}@${{ needs.build-arm64.outputs.digest }}
