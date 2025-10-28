@@ -13,7 +13,7 @@ ADD https://github.com/1player/host-spawn/releases/download/${HOST_SPAWN_VERSION
 FROM docker.io/library/alpine as k9s
 ARG TARGETARCH
 # renovate: datasource=github-tags depName=k9s packageName=derailed/k9s
-ARG K9S_VERSION=v0.50.6
+ARG K9S_VERSION=v0.50.16
 ADD https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_${TARGETARCH}.tar.gz .
 RUN tar -xzf ./k9s_Linux_${TARGETARCH}.tar.gz k9s
 
