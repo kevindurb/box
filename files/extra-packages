@@ -5,7 +5,6 @@ diff
 diffutils
 duf
 entr
-# eza
 fastfetch
 find
 findmnt
@@ -22,7 +21,7 @@ hostname
 htop
 httpie
 jq
-just
+k9s
 kubectl
 lazygit
 less

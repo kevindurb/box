@@ -10,21 +10,6 @@ ARG HOST_SPAWN_VERSION=v1.6.0
 ARG MARCH=aarch64
 ADD https://github.com/1player/host-spawn/releases/download/${HOST_SPAWN_VERSION}/host-spawn-${MARCH} /host-spawn
 
-FROM docker.io/library/alpine as k9s
-ARG TARGETARCH
-# renovate: datasource=github-tags depName=k9s packageName=derailed/k9s
-ARG K9S_VERSION=v0.50.6
-ADD https://github.com/derailed/k9s/releases/download/${K9S_VERSION}/k9s_Linux_${TARGETARCH}.tar.gz .
-RUN tar -xzf ./k9s_Linux_${TARGETARCH}.tar.gz k9s
-
-FROM docker.io/library/alpine as krew
-ARG TARGETARCH
-# renovate: datasource=github-tags depName=krew packageName=kubernetes-sigs/krew
-ARG KREW_VERSION=v0.4.5
-ADD https://github.com/kubernetes-sigs/krew/releases/download/${KREW_VERSION}/krew-linux_${TARGETARCH}.tar.gz .
-RUN tar -xzf ./krew-linux_${TARGETARCH}.tar.gz &&\
-  mv krew-linux_${TARGETARCH} krew
-
 FROM quay.io/fedora/fedora:42
 ARG TARGETARCH
 
@@ -36,8 +21,6 @@ RUN sh ./install_extra_packages.sh &&\
   rm ./extra-packages ./install_extra_packages.sh
 
 COPY --from=host-spawn-${TARGETARCH} /host-spawn /usr/bin/host-spawn
-COPY --from=k9s /k9s /usr/local/bin/k9s
-COPY --from=krew /krew /usr/local/bin/krew
 
 RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
   ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/flatpak && \
