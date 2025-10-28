@@ -10,7 +10,7 @@ ARG HOST_SPAWN_VERSION=v1.6.2
 ARG MARCH=aarch64
 ADD https://github.com/1player/host-spawn/releases/download/${HOST_SPAWN_VERSION}/host-spawn-${MARCH} /host-spawn
 
-FROM quay.io/fedora/fedora:42
+FROM quay.io/fedora/fedora:42@sha256:fd1b470311329a6da0c600797379486c47e2352187a3d2c1bf1271e20e81f74a
 ARG TARGETARCH
 
 WORKDIR /tmp
