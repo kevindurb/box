@@ -20,6 +20,8 @@ COPY ./files/install_extra_packages.sh ./
 RUN sh ./install_extra_packages.sh &&\
   rm ./extra-packages ./install_extra_packages.sh
 
+RUN cracklib-packer /usr/share/dict/words
+
 COPY --from=host-spawn-${TARGETARCH} /host-spawn /usr/bin/host-spawn
 
 RUN ln -fs /usr/bin/distrobox-host-exec /usr/local/bin/docker && \
