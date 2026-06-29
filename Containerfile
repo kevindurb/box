@@ -21,7 +21,6 @@ RUN dnf5 install --assumeyes \
     python-pip \
     python3-pip \
     rsync \
-    sudo \
     tailscale \
     tini \
     util-linux-user \
