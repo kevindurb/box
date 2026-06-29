@@ -1,1 +1,1 @@
-FROM quay.io/fedora/fedora:43
+FROM quay.io/fedora/fedora:45@sha256:c973109b2dff22f760eebf64c3676a60409a3a822f57d048052a3272a07df077
