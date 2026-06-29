@@ -3,9 +3,13 @@
   "extends": [
     "config:recommended",
     "docker:pinDigests",
+    ":automergeDigest",
+    ":automergeLinters",
+    ":automergePatch",
     ":automergeMinor",
     ":disableRateLimiting"
   ],
+  "ignoreTests": true,
   "automergeType": "pr",
   "automergeStrategy": "merge-commit",
   "platform": "github",
