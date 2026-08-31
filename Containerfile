@@ -1,4 +1,4 @@
-FROM quay.io/fedora/fedora:44@sha256:11ee4afbebd03f6b74f35a07f772e7ef92f2184937e05c4664d73e7649d6e640
+FROM quay.io/fedora/fedora:44
 
 ADD https://pkgs.tailscale.com/stable/fedora/tailscale.repo /etc/yum.repos.d/tailscale.repo
 
