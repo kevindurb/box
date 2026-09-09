@@ -26,6 +26,7 @@ mkdir -p "$STATE_DIR" "$RUNTIME_DIR"
 ) &
 
 exec tailscaled \
+    --tun=userspace-networking \
     --statedir="$STATE_DIR" \
     --socket="$SOCKET" \
     --socks5-server=localhost:1055 \
