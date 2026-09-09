@@ -17,7 +17,6 @@ RUN dnf5 install --assumeyes \
     git \
     gnupg2 \
     gpg \
-    libcap \
     pv \
     python-pip \
     python3-pip \
@@ -42,8 +41,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
-RUN setcap 'cap_net_admin,cap_net_raw+eip' /usr/bin/tailscaled
 
 USER $USERNAME
 WORKDIR $HOME
